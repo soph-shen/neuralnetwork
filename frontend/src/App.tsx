@@ -45,7 +45,6 @@ function App() {
     }
   };
 
-  // 👉 this will be called when you press Clear
   const handleClear = () => {
     setPrediction(null);
     setError(null);
@@ -84,7 +83,7 @@ function App() {
             gridSize={GRID_SIZE}
             pixelSize={PIXEL_SIZE}
             handlePredict={handlePredict}
-            onClear={handleClear}   // 👈 pass clear callback
+            onClear={handleClear}  
           />
 
           <div style={{ marginTop: 8 }}>
