@@ -6,6 +6,8 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.py[cod]
+*.egg-info/
 
 # Virtual environments
 venv/
@@ -22,3 +24,12 @@ data/
 
 # VS Code settings
 .vscode/
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store

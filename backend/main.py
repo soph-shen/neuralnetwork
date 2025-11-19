@@ -8,7 +8,7 @@ import numpy as np
 
 #internal
 from network import NeuralNetwork
-from components.loss_function import CrossEntropy
+from components.losses.loss_function import CrossEntropy
 
 def load_image(path: Path) -> np.ndarray:
     """ Load one image and return it as a (1,4096) array in [0,1]"""
