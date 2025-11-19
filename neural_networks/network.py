@@ -12,14 +12,12 @@ from components.activation_function import ReLU, Softmax
 
 class NeuralNetwork():
     def __init__(self, dimensions: list[int], learning_rate: float, loss_function: LossFunction):
-        # initialize the layers accordingly + setup loss function
         self.dimensions = dimensions
         self.learning_rate = learning_rate
         self.loss_function = loss_function
         self.layers: list[LinearLayer] = []
         
-        
-        for i in range(len(dimensions) - 1):
+        for i in range(len(dimensions) - 1):  #Has N-1 total layers
             input_size = dimensions[i]
             output_size = dimensions[i + 1]
 
@@ -29,11 +27,11 @@ class NeuralNetwork():
             else:
                 activation = Softmax()
 
-            layer = LinearLayer(input_size, output_size, activation)
+            layer = LinearLayer(input_size, output_size, activation)  #New layer with weights and biases
             self.layers.append(layer)
     
     @classmethod
-    def load_network(cls, path: str, loss_function):
+    def load_network(cls, path: str, loss_function: LossFunction):
         with open(path, "r") as f:
             data = json.load(f)
 
@@ -62,6 +60,7 @@ class NeuralNetwork():
         return net
         
     def predict(self, input: np.ndarray) -> np.ndarray:
+        """Returns class probabilities for input data"""
         x = input
         for layer in self.layers:
             x = layer.forward(x)
@@ -76,10 +75,11 @@ class NeuralNetwork():
         grad = self.loss_function.get_training_loss(response, prediction)
         
         for layer in reversed(self.layers):
-            grad = layer.backward(grad, self.learning_rate)
+            grad = layer.backward(grad, self.learning_rate)     #backpropagation
         return prediction
     
     def save_network(self, path: str):
+        """Creates a JSON file to save the model with weights and biases"""
         data = {
             "dimensions": self.dimensions,
             "learning_rate": self.learning_rate,
