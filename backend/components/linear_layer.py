@@ -4,7 +4,7 @@
 import numpy as np
 
 #internal
-from components.activation_function import ActivationFunction
+from components.activations.activation_function import ActivationFunction
 
 
 class LinearLayer:

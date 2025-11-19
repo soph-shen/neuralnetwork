@@ -95,6 +95,7 @@ class NeuralNetwork():
         layer.biases = np.array(saved_layer["biases"])
     
     def _load_layer_activation(layer, saved_layer):
+        act_name = saved_layer
         if act_name == "ReLU":
             layer.activation = ReLU()
         elif act_name == "Softmax":
