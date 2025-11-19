@@ -13,7 +13,6 @@ from network import NeuralNetwork
 from components.loss_function import CrossEntropy
 
 
-
 #Setup app
 app = FastAPI()
 
@@ -43,13 +42,12 @@ def preprocess_canvas(arr: np.ndarray) -> np.ndarray:
         return arr
 
     arr = np.clip(arr, 0.0, 1.0)        #in case of noise, clip to [0,1] so that it can be used in the model
-    """THIS IS WHERE I SHOULD ADD BLUR"""
+    
     img = Image.fromarray((arr * 255).astype(np.uint8))
-    img = img.filter(ImageFilter.GaussianBlur(radius=0.7))  # tweak 0.5–1.0
+    img = img.filter(ImageFilter.GaussianBlur(radius=1.5))   #larger radius = stronger blur
 
+    # stretch contrast so strokes really stand out: scale min to 0 and max to 1
     norm = np.array(img, dtype=np.float32) / 255.0
-
-    # stretch contrast so strokes really stand out
     mn, mx = norm.min(), norm.max()
     norm = norm - mn
     if mx - mn > 1e-6:
