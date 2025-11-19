@@ -11,13 +11,18 @@ from network import NeuralNetwork
 from components.loss_function import CrossEntropy
 
 def load_image(path: Path) -> np.ndarray:
+    """ Load one image and return it as a (1,4096) array in [0,1]"""
     img = Image.open(path).convert("L").resize((64, 64))
-    array = np.array(img, dtype=np.float32)   # 0–255
-    normalize = array / 255.0                 # 0–1
+    array = np.array(img, dtype=np.float32)   
+    normalize = array / 255.0                 #normalize after removing color in convert("L"), 
     flattened_array = normalize.flatten().reshape(1, -1)
     return flattened_array
 
-def build_train_image_info():
+def label_data():
+    """
+    Label each training data to its true value. 
+    File name already corresponds to each value, i.e. if b=1, label=0
+    """
     digits = [0,1,2,3,4,5,6,7,8,9]
     image_info = []
     for c in range(1, 101):
@@ -27,36 +32,36 @@ def build_train_image_info():
                 image_info.append((path, label))
     return image_info
 
-def iter_image_batches(image_info, batch_size):
-    for i in range(0, len(image_info), batch_size):
-        batch = image_info[i:i+batch_size]
-        X_list, y_list = [], []
-        for p, y in batch:
-            p = Path(p)
-            if not p.exists():
-                continue
-            X_list.append(load_image(p))
-            y_list.append(y)
-        if not X_list:
-            continue
-        X = np.vstack(X_list)            
-        y = np.asarray(y_list, dtype=np.int64)
-        yield X, y
-
-def build_dataset(image_info):
+def build_dataset(batch):
+    """Converts to features X: (N,4096) and labels y:1-D array (N,)"""
     X_list, y_list = [], []
-    for path, label in image_info:
-        x_i = load_image(path)
-        X_list.append(x_i)
+    for path, label in batch:
+        path = Path(path)
+        if not path.exists():
+            continue
+        X_list.append(load_image(path))
         y_list.append(label)
-
+    
+    if not X_list:
+        return None, None 
+    
     X = np.vstack(X_list)
     y = np.array(y_list, dtype=int)
     return X, y
 
-def debug_label_distribution(image_info, name="dataset"):
-    _, y = build_dataset(image_info)
-    unique, counts = np.unique(y, return_counts=True)
+def iter_image_batches(image_info, batch_size):
+    """Creates mini batches"""
+    for i in range(0, len(image_info), batch_size):
+        batch = image_info[i:i+batch_size]
+        X, y = build_dataset(batch)
+        if X is None:
+            continue
+        yield X, y
+
+def class_distribution(image_info, name="dataset"):
+    """Checks label distribution for imbalanced data"""
+    labels = [label for _, label in image_info]
+    unique, counts = np.unique(labels, return_counts=True)
     print(f"\nLabel distribution for {name}:")
     print(dict(zip(unique, counts)))
 
@@ -66,8 +71,8 @@ def train_model(image_info, batch_size=32, num_epochs=5):
 
     loss_fn = CrossEntropy()
     net = NeuralNetwork(
-        dimensions=[D, 256, 128, 10],
-        learning_rate=0.05,
+        dimensions=[D, 256, 128, 10],   #2 hidden layers to learn better
+        learning_rate=0.01,
         loss_function=loss_fn,
     )
 
@@ -104,30 +109,15 @@ def test_model(image_info):
 
     return predicted_digits, accuracy
 
-"""
 def main():
-    all_info = build_train_image_info() 
-    random.shuffle(all_info)
-
-    # --- tiny subset to overfit on ---
-    tiny_info = all_info[:100]   # 100 images
-
-    print("Trying to overfit tiny set...")
-    train_model(tiny_info, batch_size=32, num_epochs=200)
-
-    print("Performance on the SAME tiny set:")
-    preds, acc = test_model(tiny_info)
-    print("Tiny-set accuracy:", acc)"""
-
-def main():
-    all_info = build_train_image_info()
+    all_info = label_data()
     random.shuffle(all_info)
     split = int(0.8 * len(all_info))
     train_image_info = all_info[:split]
     val_image_info   = all_info[split:]
 
-    debug_label_distribution(train_image_info, "train")
-    debug_label_distribution(val_image_info, "val")
+    class_distribution(train_image_info, "train")
+    class_distribution(val_image_info, "val")
 
     train_model(train_image_info, batch_size=32, num_epochs=30)
     print("Validation performance:")
