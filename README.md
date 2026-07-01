@@ -3,9 +3,9 @@
 A web app where you draw a Chinese digit and a neural network predicts which one it is. I wrote the network myself instead of using a ML library.
 
 <p align="center">
-  <img src="demo_five.png" width="45%" alt="Chinese digit five, predicted as 5">
+  <img src="demo_five.jpg" width="45%" alt="Chinese digit five, predicted as 5">
   &nbsp;&nbsp;
-  <img src="demo_eight.png" width="45%" alt="Chinese digit eight, predicted as 8">
+  <img src="demo_eight.jpg" width="45%" alt="Chinese digit eight, predicted as 8">
 </p>
 
 The two examples above are 五 (five) and 八 (eight), both predicted correctly.
