@@ -1,4 +1,4 @@
-# Chinese Digit Classifier
+# Deep Learning Image Classifier on Chinese Numbers
 
 A web app where you draw a Chinese digit and a neural network predicts which one it is. I wrote the network myself instead of using a ML library.
 
