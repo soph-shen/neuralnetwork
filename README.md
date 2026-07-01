@@ -1,31 +1,31 @@
 # Chinese Digit Classifier
 
-Draw a Chinese digit on a canvas and watch a neural network guess what you wrote. The catch: I built the network from scratch, no ML libraries doing the heavy lifting.
+A web app where you draw a Chinese digit and a neural network predicts which one it is. I wrote the network myself instead of using a ML library.
 
 <p align="center">
-  <img src="demo_five.png" width="45%" alt="Drawing of the Chinese digit five, predicted correctly as 5">
+  <img src="demo_five.png" width="45%" alt="Chinese digit five, predicted as 5">
   &nbsp;&nbsp;
-  <img src="demo_eight.png" width="45%" alt="Drawing of the Chinese digit eight, predicted correctly as 8">
+  <img src="demo_eight.png" width="45%" alt="Chinese digit eight, predicted as 8">
 </p>
 
-## What it does
+The two examples above are 五 (five) and 八 (eight), both predicted correctly.
 
-You draw a digit in the browser, hit Predict, and the model tells you which digit it is. Above are two live examples: 五 (five) and 八 (eight), both classified correctly.
+## About
 
-The interesting part is under the hood. Instead of reaching for PyTorch or TensorFlow, I implemented the whole network by hand: the forward pass, backpropagation, and cross entropy loss. It's trained on the [Chinese MNIST dataset](https://www.kaggle.com/datasets/gpreda/chinese-mnist/code).
+The network is written from scratch, including the forward pass, backpropagation, and cross-entropy loss. It was trained on the [Chinese MNIST dataset](https://www.kaggle.com/datasets/gpreda/chinese-mnist/code).
 
-## How it's built
+I made it because I wanted to understand how neural networks work under the surface rather than just calling a library function. The drawing interface was a way to test the model on my own handwriting.
 
-The project has two halves that talk to each other:
+## Structure
 
-* `backend/` is a FastAPI server (Python) that holds the neural network code and serves predictions.
+* `backend/` is a FastAPI server (Python) that holds the network code and returns predictions.
 * `frontend/` is a React and Vite app (TypeScript) with the drawing canvas.
 
-When you click Predict, the canvas sends your drawing to the backend, the network runs a forward pass, and the predicted digit comes back to the screen.
+The canvas sends your drawing to the backend, which runs it through the network and sends back a prediction.
 
-## Running it yourself
+## Running it
 
-You'll need the training data first. Download the [Chinese MNIST dataset](https://www.kaggle.com/datasets/gpreda/chinese-mnist/code) from Kaggle and place it in a `data/` folder. (The data is too large to store here, which is normal for datasets.)
+The model is already trained and its weights are saved as a JSON file, so there's nothing to download or train.
 
 **Frontend**
 
@@ -41,7 +41,3 @@ npm run dev
 poetry install
 poetry run uvicorn backend.server:app --reload
 ```
-
-## Why I built it
-
-I wanted to really understand what happens inside a neural network, not just call `.fit()` and trust it. Writing the forward and backward passes by hand made the math click, and wrapping it in a draw to predict app turned it into something you can actually play with.
