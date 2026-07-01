@@ -38,6 +38,7 @@ npm run dev
 **Backend**
 
 ```bash
+cd backend
 poetry install
-poetry run uvicorn backend.server:app --reload
+poetry run uvicorn server:app --reload
 ```
