@@ -67,6 +67,9 @@ def predict(payload: Predict64):
     try:
         arr = np.array(payload.pixels, dtype=np.float32)
         arr_proc = preprocess_canvas(arr)
+        X = arr_proc.flatten().reshape(1, -1)
+        probs = _net.predict(X)
+        pred = int(np.argmax(probs, axis=1)[0])
         return {"predicted_digit": pred, "probs": probs[0].tolist()}
 
     except Exception as e:
