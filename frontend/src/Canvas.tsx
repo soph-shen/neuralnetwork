@@ -1,9 +1,5 @@
-// builtin
-
 // external
 import React, { useRef, useEffect, useState } from 'react';
-
-// internal
 
 interface Coordinate {
     row: number,
