@@ -72,7 +72,6 @@ class LinearLayer:
 
         grad_prev = dz @ self.weights.T   
 
-        # 4) Update parameters
         self.__update_weights(dW, learning_rate)
         self.__update_biases(db, learning_rate)
 
