@@ -12,7 +12,7 @@ The two examples above are 五 (five) and 八 (eight), both predicted correctly.
 
 ## About
 
-The network is written from scratch, including the forward pass, backpropagation, and cross-entropy loss. It was trained on the [Chinese MNIST dataset](https://www.kaggle.com/datasets/gpreda/chinese-mnist/code).
+The network is written from scratch, including the forward pass, backpropagation, and cross-entropy loss. It was trained on the [Chinese MNIST dataset](https://www.kaggle.com/datasets/gpreda/chinese-mnist/data).
 
 I made it because I wanted to understand how neural networks work under the surface rather than just calling a library function. The drawing interface was a way to test the model on my own handwriting.
 
